@@ -6,7 +6,7 @@ Build the program using Visual Studio 2017 or other compatabile compiler.
 
 Running the program you will first see an empty search box.
 
-![](Images/SearchEmpty.png)
+![](Docs/SearchEmpty.png)
 
 Pressing Esc from here will hide the search box. Pressing the activation hotkey (CTRL-SHIFT-X) will bring it back.
 
@@ -14,7 +14,7 @@ Pressing Esc from here will hide the search box. Pressing the activation hotkey 
 
 To add a new bookmark, press the "+" button to the right of the search box and fill in the details.
 
-![](Images/AddBookmark.png)
+![](Docs/AddBookmark.png)
 
 Note that if you have a url already copied it will be pre-filled here.
 
@@ -30,25 +30,25 @@ After you have a few bookmarks saved, the main search box can now be used to sea
 
 After typing a keyword, tag suggestions will appear on the top left. (Only the last word typed is used for this.)
 
-![](Images/SearchTagSuggestions.png)
+![](Docs/SearchTagSuggestions.png)
 
 Pressing tab/shift-tab cycles through the suggested tags.
 
-![](Images/SearchTagSuggestCycle.png)
+![](Docs/SearchTagSuggestCycle.png)
 
 Pressing space will move the highlighted suggested tag to the chosen tags on the right.
 
-![](Images/SearchTagChosen.png)
+![](Docs/SearchTagChosen.png)
 
 Once a tag is chosen, any search results will be ones that contain this tag.
 
 Other terms that are typed in the searchbox, but not chosen as a tag are used to search against the title of the bookmark.
 
-![](Images/SearchTerm.png)
+![](Docs/SearchTerm.png)
 
 Pressing up/down arrows cycles through the bookmark results.
 
-![](Images/SearchTermCycle.png)
+![](Docs/SearchTermCycle.png)
 
 Pressing return after you have a bookmark selected will open that bookmark and hide the search window.
 
@@ -58,7 +58,7 @@ Bookmarks are opened in your default web browser.
 
 Right click on a serach result to edit or delete it.
 
-![](Images/EditDeleteBookmark.png)
+![](Docs/EditDeleteBookmark.png)
 
 
 ### Where are the bookmarks stored?
