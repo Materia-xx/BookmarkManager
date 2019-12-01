@@ -34,7 +34,7 @@ namespace BookmarkManager
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.Topmost = true;
-            BookmarkTestData.InsertTestRecords(); // Uncomment to create test records
+            //BookmarkTestData.InsertTestRecords(); // Uncomment to create test records
 
             // Get db tables/cache loaded up as fast as possible so UI is more snappy on the first db hit.
             DataProvider.DataStore.Value.Bookmarks.Value.TagsSearch("#pre-cache#");
