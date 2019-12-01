@@ -34,7 +34,7 @@ namespace BookmarkManager
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.Topmost = true;
-            //BookmarkTestData.InsertTestRecords(); // Uncomment to create test records
+            BookmarkTestData.InsertTestRecords(); // Uncomment to create test records
 
             // Get db tables/cache loaded up as fast as possible so UI is more snappy on the first db hit.
             DataProvider.DataStore.Value.Bookmarks.Value.TagsSearch("#pre-cache#");
@@ -56,7 +56,7 @@ namespace BookmarkManager
 
         private void RegisterActivationHotkey()
         {
-            activationHotkey = new HotKey(ModifierKeys.Shift, Keys.S, this); // TODO: make this configurable and store the value in the db
+            activationHotkey = new HotKey(ModifierKeys.Control | ModifierKeys.Shift, Keys.X, this); // TODO: make this configurable and store the value in the db
             activationHotkey.HotKeyPressed += Activation_HotKeyPressed;
         }
 
@@ -69,7 +69,10 @@ namespace BookmarkManager
         private void ClearSearchAndInputs()
         {
             txtSearch.Text = "";
+            chosenTags.Clear();
+            stackTagsChosen.Children.Clear();
             DoSearches(true);
+            this.UpdateLayout();
         }
 
         private void CenterWindowOnScreen()

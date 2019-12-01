@@ -20,7 +20,7 @@ namespace BookmarkDataProvider
             {
                 if (dataStoreDatabase == null)
                 {
-                    var dataStoreDbPath = Path.Combine(ProgramExeFolder, "Bookmark.db");
+                    var dataStoreDbPath = Path.Combine(ProgramExeFolder, "Bookmark.db"); // TODO: update this to instead be the user folder, update the docs that mention where this is also
                     dataStoreDatabase = new LiteDatabase(dataStoreDbPath);
                 }
                 return dataStoreDatabase;

@@ -46,12 +46,12 @@
 
         <StackPanel Grid.Row="0" x:Name="stackTagSelector" Orientation="Horizontal" />
         <StackPanel Grid.Row="0" x:Name="stackTagsChosen" Orientation="Horizontal" FlowDirection="RightToLeft" />
-        <Border Grid.Row="1" BorderThickness="1" BorderBrush="AliceBlue" Background="AliceBlue" CornerRadius="10" Padding="2" Margin="3,3,3,3">
+        <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" Background="AliceBlue" CornerRadius="10" Padding="2" Margin="3,3,3,3">
             <TextBox x:Name="txtSearch" TextWrapping="NoWrap" KeyUp="TxtSearch_KeyUp" BorderThickness="0" Background="AliceBlue" FontFamily="Consolas" Margin="0,2,0,0" IsTabStop="False"/>
         </Border>
         <StackPanel Grid.Row="2" x:Name="stackResult" Orientation="Vertical" />
 
-        <Border Grid.Row="1" Grid.Column="1" CornerRadius="10" Background="AliceBlue" BorderBrush="DarkBlue" Margin="3,3,3,3">
+        <Border Grid.Row="1" Grid.Column="1" CornerRadius="10" Background="AliceBlue" BorderThickness="1" BorderBrush="Black" Margin="3,3,3,3">
             <Button x:Name="btnAddBookmark" Content="+" Style="{StaticResource SameBackgroundButton}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Consolas" FontSize="16" FontWeight="Bold" Foreground="#444444" BorderThickness="0" Margin="0,2,0,2" Click="BtnAddBookmark_Click" IsTabStop="False"/>
         </Border>
     </Grid>
