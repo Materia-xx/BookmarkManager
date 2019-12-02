@@ -58,8 +58,9 @@ namespace BookmarkManager
                 {
                     bookmark.Tags.Remove(tag);
                     RenderBookmark();
+                    DoTagHintsSearch();
                 };
-                var tagPill = Pills.CreatePill(Pills.PillType.Chosen, tag, "X", click);
+                var tagPill = Pill.CreatePill(Pill.PillStyle_Chosen, tag, "X", click);
                 stackTags.Children.Add(tagPill);
             }
 
@@ -87,7 +88,7 @@ namespace BookmarkManager
                     RenderBookmark();
                     RenderTagHints();
                 };
-                var tagPill = Pills.CreatePill(Pills.PillType.Unselected, tagHint, "+", click);
+                var tagPill = Pill.CreatePill(Pill.PillStyle_Unselected, tagHint, "+", click);
                 stackTagHints.Children.Add(tagPill);
             }
         }
@@ -165,7 +166,7 @@ namespace BookmarkManager
             }
         }
 
-        private void TxtTagSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void DoTagHintsSearch()
         {
             var allKeywords = txtTagSearch.Text.Split(charArraySpace, StringSplitOptions.RemoveEmptyEntries).ToList();
             var searchWord = allKeywords.Count > 0 ? allKeywords.Last() : string.Empty;
@@ -178,10 +179,18 @@ namespace BookmarkManager
 
                 foreach (var foundTag in foundTags)
                 {
-                    tagHints.Add(foundTag);
+                    if (!bookmark.Tags.Contains(foundTag))
+                    {
+                        tagHints.Add(foundTag);
+                    }
                 }
             }
             RenderTagHints();
+        }
+
+        private void TxtTagSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            DoTagHintsSearch();
         }
     }
 }

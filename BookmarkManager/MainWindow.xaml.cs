@@ -112,11 +112,12 @@ namespace BookmarkManager
                     // Only add this hint tag if it is not already a chosen tag
                     if (!chosenTags.Contains(foundTag))
                     {
-                        var tagPill = Pills.CreatePill(Pills.PillType.Unselected, foundTag);
+                        var tagPill = Pill.CreatePill(Pill.PillStyle_Unselected, foundTag);
                         
-                        // Only show the tag if there is enough space to do it without overlapping with the chosen tags
+                        // Add the tag first so it can calculated the actual rendered width
                         stackTagSelector.Children.Add(tagPill);
                         double hintTagsWidth = GetHintTagsWidth();
+                        // But then remove it again if it doesn't fit
                         if (hintTagsWidth > remainingWidth)
                         {
                             stackTagSelector.Children.Remove(tagPill);
@@ -137,7 +138,7 @@ namespace BookmarkManager
             double measuredWidth = 0;
             foreach (var tag in stackTagsChosen.Children)
             {
-                measuredWidth += (tag as Border).ActualWidth + 2; // 2 is the known margin on tags
+                measuredWidth += (tag as Pill).ActualWidth + 2; // 2 is the known margin on tags
             }
             return measuredWidth;
         }
@@ -148,7 +149,7 @@ namespace BookmarkManager
             double measuredWidth = 0;
             foreach (var tag in stackTagSelector.Children)
             {
-                measuredWidth += (tag as Border).ActualWidth + 2; // 2 is the known margin on tags
+                measuredWidth += (tag as Pill).ActualWidth + 2; // 2 is the known margin on tags
             }
             return measuredWidth;
         }
@@ -186,14 +187,14 @@ namespace BookmarkManager
             // Update borders to show the chosen one
             for (int tagIndex = 0; tagIndex < tagCount; tagIndex++)
             {
-                var tagPill = stackTagSelector.Children[tagIndex] as Border;
+                var tagPill = stackTagSelector.Children[tagIndex] as Pill;
                 if (selectedTagIndex == -1 || selectedTagIndex != tagIndex)
                 {
-                    Pills.ModifyPillStyle(Pills.PillType.Unselected, tagPill);
+                    tagPill.ModifyStyle(Pill.PillStyle_Unselected);
                 }
                 else
                 {
-                    Pills.ModifyPillStyle(Pills.PillType.Selected, tagPill);
+                    tagPill.ModifyStyle(Pill.PillStyle_Selected);
                 }
             }
         }
@@ -206,10 +207,10 @@ namespace BookmarkManager
                 return;
             }
 
-            var selectedTagPill = stackTagSelector.Children[selectedTagIndex] as Border;
-            var selectedTag = Pills.GetPillText(selectedTagPill);
+            var selectedTagPill = stackTagSelector.Children[selectedTagIndex] as Pill;
+            var selectedTag = selectedTagPill.GetPillText();
             chosenTags.Add(selectedTag);
-            var chosenTag = Pills.CreatePill(Pills.PillType.Chosen, selectedTag);
+            var chosenTag = Pill.CreatePill(Pill.PillStyle_Chosen, selectedTag);
             stackTagsChosen.Children.Add(chosenTag);
             stackTagSelector.Children.Clear();
         }
@@ -222,7 +223,7 @@ namespace BookmarkManager
             if (bookmark != null)
             {
                 // Create pill with embedded bookmark id
-                var resultPill = Pills.CreatePill(Pills.PillType.Unselected, bookmark.Title);
+                var resultPill = Pill.CreatePill(Pill.PillStyle_Unselected, bookmark.Title);
 
                 // Add the right click context menu
                 // Tag stores the result index and the bookmark id
@@ -252,8 +253,8 @@ namespace BookmarkManager
         {
             MenuItem editBookmarkCommand = sender as MenuItem;
             ContextMenu pillMenu = editBookmarkCommand.Parent as ContextMenu;
-            Border pillResult = pillMenu.PlacementTarget as Border;
-            var bookmarkIds = Pills.GetBookmarkIdFromPill(pillResult);
+            Pill pillResult = pillMenu.PlacementTarget as Pill;
+            var bookmarkIds = pillResult.GetBookmarkIdFromPill();
             var bookmark = DataProvider.DataStore.Value.Bookmarks.Value.Get(bookmarkIds.Item2);
 
             var msgResponse = MessageBox.Show($"Delete '{bookmark.Title}'?", "Delete bookmark", MessageBoxButton.YesNo);
@@ -269,8 +270,8 @@ namespace BookmarkManager
 
         private void ResultPill_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Border pillResult = sender as Border;
-            var bookmarkIds = Pills.GetBookmarkIdFromPill(pillResult);
+            Pill pillResult = sender as Pill;
+            var bookmarkIds = pillResult.GetBookmarkIdFromPill();
             selectedBookmarkIndex = bookmarkIds.Item1;
             StackResults_RenderBookmarkResultStyles();
         }
@@ -279,8 +280,8 @@ namespace BookmarkManager
         {
             MenuItem editBookmarkCommand = sender as MenuItem;
             ContextMenu pillMenu = editBookmarkCommand.Parent as ContextMenu;
-            Border pillResult = pillMenu.PlacementTarget as Border;
-            var bookmarkIds = Pills.GetBookmarkIdFromPill(pillResult);
+            Pill pillResult = pillMenu.PlacementTarget as Pill;
+            var bookmarkIds = pillResult.GetBookmarkIdFromPill();
 
             this.Visibility = Visibility.Collapsed;
             var bookmarkEditor = new EditBookmarkWindow();
@@ -403,22 +404,22 @@ namespace BookmarkManager
             // Update borders to show the chosen one
             for (int resultIndex = 0; resultIndex < resultsCount; resultIndex++)
             {
-                var resultPill = stackResult.Children[resultIndex] as Border;
+                var resultPill = stackResult.Children[resultIndex] as Pill;
                 if (selectedBookmarkIndex == -1 || selectedBookmarkIndex != resultIndex)
                 {
-                    Pills.ModifyPillStyle(Pills.PillType.Unselected, resultPill);
+                    resultPill.ModifyStyle(Pill.PillStyle_Unselected);
                 }
                 else
                 {
-                    Pills.ModifyPillStyle(Pills.PillType.Selected, resultPill);
+                    resultPill.ModifyStyle(Pill.PillStyle_Selected);
                 }
             }
         }
 
         private bool OpenBookmark(int resultIndex)
         {
-            var resultPill = stackResult.Children[resultIndex] as Border;
-            var bookmarkIds = Pills.GetBookmarkIdFromPill(resultPill);
+            var resultPill = stackResult.Children[resultIndex] as Pill;
+            var bookmarkIds = resultPill.GetBookmarkIdFromPill();
             var bookmark = DataProvider.DataStore.Value.Bookmarks.Value.Get(bookmarkIds.Item2);
             if (!string.IsNullOrWhiteSpace(bookmark?.Url))
             {

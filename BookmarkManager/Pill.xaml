@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="BookmarkManager.Pill"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookmarkManager"
+             Name="PillControl"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="UnselectedPill" TargetType="{x:Type local:Pill}">
+            <Setter Property="PillBorderThickness" Value="1"/>
+            <Setter Property="PillForegroundBrush" Value="White"/>
+            <Setter Property="PillBorderBrush" Value="DarkGray"/>
+            <Setter Property="PillBackgroundBrush" Value="Gray"/>
+            <Setter Property="PillButtonBorderBrush" Value="DarkGray"/>
+            <Setter Property="PillButtonBackgroundBrush" Value="Gray"/>
+            <Setter Property="PillButtonBorderBrushMouseOver" Value="#AAAAAA"/>
+            <Setter Property="PillButtonBackgroundBrushMouseOver" Value="#999999"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=PillButtonBorder, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="PillButtonBorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBorderBrushMouseOver}"/>
+                    <Setter Property="PillButtonBackgroundBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBackgroundBrushMouseOver}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SelectedPill" TargetType="{x:Type local:Pill}">
+            <Setter Property="PillBorderThickness" Value="2"/>
+            <Setter Property="PillForegroundBrush" Value="Black"/>
+            <Setter Property="PillBorderBrush" Value="Gray"/>
+            <Setter Property="PillBackgroundBrush" Value="LightGray"/>
+            <Setter Property="PillButtonBorderBrush" Value="Gray"/>
+            <Setter Property="PillButtonBackgroundBrush" Value="LightGray"/>
+            <Setter Property="PillButtonBorderBrushMouseOver" Value="#CCCCCC"/>
+            <Setter Property="PillButtonBackgroundBrushMouseOver" Value="#AAAAAA"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=PillButtonBorder, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="PillButtonBorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBorderBrushMouseOver}"/>
+                    <Setter Property="PillButtonBackgroundBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBackgroundBrushMouseOver}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ChosenPill" TargetType="{x:Type local:Pill}">
+            <Setter Property="PillBorderThickness" Value="2"/>
+            <Setter Property="PillForegroundBrush" Value="White"/>
+            <Setter Property="PillBorderBrush" Value="DarkGreen"/>
+            <Setter Property="PillBackgroundBrush" Value="Green"/>
+
+            <Setter Property="PillButtonBorderBrush" Value="DarkGreen"/>
+            <Setter Property="PillButtonBackgroundBrush" Value="Green"/>
+            <Setter Property="PillButtonBorderBrushMouseOver" Value="#00AA00"/>
+            <Setter Property="PillButtonBackgroundBrushMouseOver" Value="#009900"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=PillButtonBorder, Path=IsMouseOver}" Value="True" >
+                    <Setter Property="PillButtonBorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBorderBrushMouseOver}"/>
+                    <Setter Property="PillButtonBackgroundBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=PillButtonBackgroundBrushMouseOver}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Border x:Name="PillBorder" Margin="2,2,2,2" CornerRadius="10" 
+            BorderBrush="{Binding PillBorderBrush, ElementName=PillControl}"
+            BorderThickness="{Binding PillBorderThickness, ElementName=PillControl}"
+            Background="{Binding PillBackgroundBrush, ElementName=PillControl}">
+        <StackPanel Orientation="Horizontal">
+            <Label x:Name="PillLabel" VerticalAlignment="Center" FontFamily="Consolas"
+                   Foreground="{Binding PillForegroundBrush, ElementName=PillControl}"
+                   />
+            <Border x:Name="PillButtonBorder" Height="25" Width="25" CornerRadius="10"
+                    BorderBrush="{Binding PillButtonBorderBrush, ElementName=PillControl}"
+                    BorderThickness="{Binding PillBorderThickness, ElementName=PillControl}"
+                    Background="{Binding PillButtonBackgroundBrush, ElementName=PillControl}"
+                    >
+                <TextBlock x:Name="PillButtonLabel"
+                       FontFamily="Consolas" FontSize="14"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Background="{Binding PillButtonBackgroundBrush, ElementName=PillControl}"
+                       Foreground="{Binding PillForegroundBrush, ElementName=PillControl}"
+                   >X</TextBlock>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>
