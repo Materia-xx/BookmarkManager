@@ -1,0 +1,73 @@
+﻿<Window x:Class="BookmarkManager.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookmarkManager"
+        mc:Ignorable="d"
+        Title="Config" Height="300" Width="500" Loaded="Window_Loaded"
+        AllowsTransparency="True" WindowStyle="None">
+    <Window.Background>
+        <SolidColorBrush Opacity="0.0" Color="White"/>
+    </Window.Background>
+    <Border BorderBrush="Gray" Background="Gray" BorderThickness="2" CornerRadius="10">
+        <Grid Margin="3,3,3,3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="27"/> <!-- Hotkey label -->
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="23"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="27"/> <!-- Search Form label -->
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="23"/>
+                <RowDefinition Height="23"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Hotkey label -->
+            <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="AliceBlue" Background="#BBBBBB" CornerRadius="10">
+                <Label Grid.Column="1" Grid.Row="1" Content="Hotkey" HorizontalAlignment="Left" FontFamily="Consolas" FontWeight="Bold"/>
+            </Border>
+            
+            <!-- Hotkey settings -->
+            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3">
+                <Label Content="Key:" HorizontalAlignment="Right" FontFamily="Consolas" FontSize="10" />
+                <Border BorderThickness="1" BorderBrush="AliceBlue" Background="AliceBlue" CornerRadius="10" Padding="2" Margin="3,3,3,3" Width="40">
+                    <TextBox x:Name="txtHotkeyKey" TextWrapping="NoWrap" BorderThickness="0" Background="AliceBlue" FontFamily="Consolas" FontSize="10" Margin="0,1,0,0" TextChanged="TxtHotkeyKey_TextChanged"/>
+                </Border>
+                <CheckBox x:Name="chkHotkeyCtrl" Height="15" FontFamily="Consolas" FontSize="10" Padding="1,1,0,0" Margin="20,0,0,0" Checked="ChkHotkeyCtrl_CheckChanged" Unchecked="ChkHotkeyCtrl_CheckChanged">Control</CheckBox>
+                <CheckBox x:Name="chkHotkeyShift" Height="15" FontFamily="Consolas" FontSize="10" Padding="1,1,0,0" Margin="20,0,0,0" Checked="ChkHotkeyShift_CheckChanged" Unchecked="ChkHotkeyShift_CheckChanged">Shift</CheckBox>
+                <CheckBox x:Name="chkHotkeyAlt" Height="15" FontFamily="Consolas" FontSize="10" Padding="1,1,0,0" Margin="20,0,0,0" Checked="ChkHotkeyAlt_CheckChanged" Unchecked="ChkHotkeyAlt_CheckChanged">Alt</CheckBox>
+            </StackPanel>
+
+
+            <!-- Search Form label -->
+            <Border Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="AliceBlue" Background="#BBBBBB" CornerRadius="10">
+                <Label Grid.Column="1" Grid.Row="1" Content="Search Form" HorizontalAlignment="Left" FontFamily="Consolas" FontWeight="Bold"/>
+            </Border>
+
+            <CheckBox Grid.Column="2" Grid.Row="7" x:Name="chkHideSearchFormOnLostFocus" Height="15" FontFamily="Consolas" FontSize="10" Padding="1,1,0,0" Margin="3,0,0,0" HorizontalAlignment="Left" Checked="ChkHideSearchFormOnLostFocus_CheckChanged" Unchecked="ChkHideSearchFormOnLostFocus_CheckChanged">Hide search form when it loses focus without searching</CheckBox>
+            <CheckBox Grid.Column="2" Grid.Row="8" x:Name="chkHideSearchFormOnSearch" Height="15" FontFamily="Consolas" FontSize="10" Padding="1,1,0,0" Margin="3,0,0,0" HorizontalAlignment="Left" Checked="ChkHideSearchFormOnSearch_CheckChanged" Unchecked="ChkHideSearchFormOnSearch_CheckChanged">Hide search form after doing a search</CheckBox>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Column="2" Grid.Row="10" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Border BorderThickness="1" BorderBrush="DarkBlue" Background="LightBlue" CornerRadius="10" Padding="2" Margin="3,3,3,3">
+                    <Button x:Name="btnSave" Content="Save" BorderThickness="0" Background="LightBlue" FontFamily="Consolas" Margin="2,2,2,2" Padding="7,0,7,0" Click="BtnSave_Click" />
+                </Border>
+                <Border BorderThickness="1" BorderBrush="DarkBlue" Background="LightBlue" CornerRadius="10" Padding="2" Margin="3,3,3,3">
+                    <Button x:Name="btnCancel" Content="Cancel" BorderThickness="0" Background="LightBlue" FontFamily="Consolas" Margin="2,2,2,2" Padding="7,0,7,0" Click="BtnCancel_Click" />
+                </Border>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>

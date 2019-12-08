@@ -6,21 +6,44 @@ namespace BookmarkDataProvider
 {
     public static class DataProvider
     {
-        public static string ProgramExeFolder
+        private static string BookmarkDbPath
         {
             get
             {
-                return Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+                var dbFolder = System.Configuration.ConfigurationManager.AppSettings["DBFolder"];
+                if (string.IsNullOrWhiteSpace(dbFolder))
+                {
+                    dbFolder = "|ApplicationData|";
+                }
+                switch (dbFolder)
+                {
+                    case "|ApplicationData|":
+                        string userFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                        dbFolder = Path.Combine(userFolderPath, "BookmarkManager");
+                        break;
+                    case "|NextToExe|":
+                        dbFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+                        break;
+                }
+
+                return Path.Combine(dbFolder, "Bookmark.db");
             }
         }
 
-        internal static LiteDatabase DataStoreDatabase
+        private static LiteDatabase DataStoreDatabase
         {
             get
             {
                 if (dataStoreDatabase == null)
                 {
-                    var dataStoreDbPath = Path.Combine(ProgramExeFolder, "Bookmark.db"); // TODO: update this to instead be the user folder, update the docs that mention where this is also
+                    var dataStoreDbPath = BookmarkDbPath;
+
+                    var dbFolder = Path.GetDirectoryName(dataStoreDbPath);
+                    if (!Directory.Exists(dbFolder))
+                    {
+                        Directory.CreateDirectory(dbFolder);
+                    }
+
                     dataStoreDatabase = new LiteDatabase(dataStoreDbPath);
                 }
                 return dataStoreDatabase;
