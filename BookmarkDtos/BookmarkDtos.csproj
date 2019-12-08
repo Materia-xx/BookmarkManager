@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SchemaDto.cs" />
+    <Compile Include="ConfigDto.cs" />
     <Compile Include="BookmarkDto.cs" />
     <Compile Include="IdBasedObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

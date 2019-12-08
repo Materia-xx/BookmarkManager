@@ -60,7 +60,19 @@ Right click on a serach result to edit or delete it.
 
 ![](Docs/EditDeleteBookmark.png)
 
-
 ### Where are the bookmarks stored?
 
-The bookmarks are stored in a database file "bookmark.db" located next to the exe. This file is created when the program first starts.
+Bookmarks are stored in a database file "Bookmark.db".
+The folder where this file resides is determined by the "DBFolder" app.config setting.
+
+    <appSettings>
+        <add key="DBFolder" value="|ApplicationData|"/>
+    </appSettings>
+
+* |ApplicationData| - Stores the db file in the application data folder. e.g. C:\Users\alias\AppData\Roaming\BookmarkManager\Bookmark.db
+* |NextToExe| - Stores the db in the same place the exe is running from.
+* Or, you may type in a path in the app.config if you want to use another location.
+
+### HotKey Configuration
+
+The HotKey (and other settings) can be re-defined by right clicking on the main search box and selecting "Configure".

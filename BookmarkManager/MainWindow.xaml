@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BookmarkManager"
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="800" Loaded="Window_Loaded"
-        AllowsTransparency="True" WindowStyle="None">
+        AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated">
     <Window.Background>
         <SolidColorBrush Opacity="0.0" Color="White"/>
     </Window.Background>

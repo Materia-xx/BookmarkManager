@@ -14,6 +14,8 @@ namespace BookmarkManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        // TODO: make it so tags can be described and the description shows up as a tooltip when you hover over the tag.
+
         private HotKey activationHotkey;
         private static char[] charArraySpace = new char[] { ' ' };
 
@@ -25,6 +27,7 @@ namespace BookmarkManager
         private List<string> chosenTags = new List<string>();
         private int selectedTagIndex = -1;
         private int selectedBookmarkIndex = -1;
+        private bool searchPerformed = false;
 
         public MainWindow()
         {
@@ -39,6 +42,7 @@ namespace BookmarkManager
             // Get db tables/cache loaded up as fast as possible so UI is more snappy on the first db hit.
             DataProvider.DataStore.Value.Bookmarks.Value.TagsSearch("#pre-cache#");
             CenterWindowOnScreen();
+            CreateSearchBoxContextMenu();
             RegisterActivationHotkey();
 
             // If there is a URL on the clipboard, do a search for it. This makes it faster to edit an
@@ -54,16 +58,112 @@ namespace BookmarkManager
             txtSearch.Focus();
         }
 
+        private void CreateSearchBoxContextMenu()
+        {
+            ContextMenu searchMenu = new ContextMenu();
+            txtSearch.ContextMenu = searchMenu;
+            // Configure
+            MenuItem configureCommand = new MenuItem();
+            configureCommand.Header = "Configure";
+            configureCommand.Click += (s, e) => {
+                var configWindow = new ConfigWindow();
+                configWindow.ShowEditor();
+                RegisterActivationHotkey();
+                ShowSearchForm();
+            };
+            searchMenu.Items.Add(configureCommand);
+        }
+
         private void RegisterActivationHotkey()
         {
-            activationHotkey = new HotKey(ModifierKeys.Control | ModifierKeys.Shift, Keys.X, this); // TODO: make this configurable and store the value in the db
-            activationHotkey.HotKeyPressed += Activation_HotKeyPressed;
+            if (activationHotkey != null)
+            {
+                activationHotkey.HotKeyPressed -= Activation_HotKeyPressed;
+                activationHotkey.Dispose();
+            }
+
+            for (int attempt=1; attempt <=3; attempt++)
+            {
+                ModifierKeys hotkeyModifiers = ModifierKeys.None;
+                Keys hotkeyKey = Keys.None;
+
+                var config = DataProvider.DataStore.Value.Config.Value.GetConfig();
+                try
+                {
+                    if (config.HotkeyAlt)
+                    {
+                        hotkeyModifiers |= ModifierKeys.Alt;
+                    }
+                    if (config.HotkeyCtrl)
+                    {
+                        hotkeyModifiers |= ModifierKeys.Control;
+                    }
+                    if (config.HotkeyShift)
+                    {
+                        hotkeyModifiers |= ModifierKeys.Shift;
+                    }
+
+                    hotkeyKey = (Keys)Enum.Parse(typeof(Keys), config.HotkeyKey, true);
+                    activationHotkey = new HotKey(hotkeyModifiers, hotkeyKey, this);
+                    activationHotkey.HotKeyPressed += Activation_HotKeyPressed;
+                    break;
+                }
+                catch
+                {
+                    // Fallback to hardcoded default if we can't parse.
+                    var defaultConfig = new ConfigDto();
+                    config.HotkeyAlt = defaultConfig.HotkeyAlt;
+                    config.HotkeyCtrl = defaultConfig.HotkeyCtrl;
+                    config.HotkeyShift = defaultConfig.HotkeyShift;
+                    config.HotkeyKey = defaultConfig.HotkeyKey;
+                    DataProvider.DataStore.Value.Config.Value.Update(config);
+                }
+            }
         }
 
         private void Activation_HotKeyPressed(HotKey obj)
         {
             ClearSearchAndInputs();
-            this.Visibility = Visibility.Visible;
+            ShowSearchForm();
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            var config = DataProvider.DataStore.Value.Config.Value.GetConfig();
+
+            // If the window is being deactivated because a search was just performed and a browser is taking focus
+            if (searchPerformed)
+            {
+                if (config.HideSearchFormOnSearch)
+                {
+                    HideSearchForm();
+                }
+            }
+            // If the window is being deactivated because the user is just clicking on some other window
+            else if(config.HideSearchFormOnLostFocus)
+            {
+                HideSearchForm();
+            }
+            searchPerformed = false;
+        }
+
+        private void HideSearchForm()
+        {
+            searchPerformed = false;
+            if (this.Visibility != Visibility.Collapsed)
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ShowSearchForm()
+        {
+            searchPerformed = false;
+            if (this.Visibility != Visibility.Visible)
+            {
+                this.Visibility = Visibility.Visible;
+            }
+            txtSearch.Focus();
         }
 
         private void ClearSearchAndInputs()
@@ -283,20 +383,20 @@ namespace BookmarkManager
             Pill pillResult = pillMenu.PlacementTarget as Pill;
             var bookmarkIds = pillResult.GetBookmarkIdFromPill();
 
-            this.Visibility = Visibility.Collapsed;
+            HideSearchForm();
             var bookmarkEditor = new EditBookmarkWindow();
             bookmarkEditor.ShowEditor(bookmarkIds.Item2);
-            this.Visibility = Visibility.Visible;
+            ShowSearchForm();
             DoSearches(true);
             txtSearch.Focus();
         }
 
         private void BtnAddBookmark_Click(object sender, RoutedEventArgs e)
         {
-            this.Visibility = Visibility.Collapsed;
+            HideSearchForm();
             var bookmarkEditor = new EditBookmarkWindow();
             bookmarkEditor.ShowEditor(null);
-            this.Visibility = Visibility.Visible;
+            ShowSearchForm();
             DoSearches(true);
             txtSearch.Focus();
         }
@@ -445,12 +545,12 @@ namespace BookmarkManager
 
         private void TxtSearch_KeyUp(object sender, KeyEventArgs e)
         {
-            // Esc closes the search window
+            // Esc hides the search window, regardless of the config settings
             if (e.Key == Key.Escape)
             {
                 e.Handled = true;
                 ClearSearchAndInputs();
-                this.Visibility = Visibility.Hidden;
+                HideSearchForm();
                 return;
             }
 
@@ -490,14 +590,16 @@ namespace BookmarkManager
             {
                 if (OpenBookmark(selectedBookmarkIndex))
                 {
+                    searchPerformed = true;
                     e.Handled = true;
                     ClearSearchAndInputs();
-                    this.Visibility = Visibility.Hidden;
+                    // The switch to the browser will trigger the fade routine if configured.
                     return;
                 }
                 else
                 {
                     MessageBox.Show("Failed to open bookmark.");
+                    ShowSearchForm();
                 }
             }
 
