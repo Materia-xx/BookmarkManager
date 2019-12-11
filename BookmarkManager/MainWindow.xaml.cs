@@ -159,10 +159,10 @@ namespace BookmarkManager
         private void ShowSearchForm()
         {
             searchPerformed = false;
-            if (this.Visibility != Visibility.Visible)
-            {
-                this.Visibility = Visibility.Visible;
-            }
+            this.Visibility = Visibility.Visible;
+            this.UpdateLayout();
+            CenterWindowOnScreen();
+            this.Focus();
             txtSearch.Focus();
         }
 
