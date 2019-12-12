@@ -628,6 +628,5 @@ namespace BookmarkManager
 
             DoSearches(false);
         }
-
     }
 }
