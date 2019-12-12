@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookmarkManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="800" Loaded="Window_Loaded"
-        AllowsTransparency="True" WindowStyle="None" Deactivated="Window_Deactivated">
+        Title="MainWindow" Height="480" Width="800" 
+        AllowsTransparency="True" WindowStyle="None"
+        Loaded="Window_Loaded" Deactivated="Window_Deactivated">
     <Window.Background>
         <SolidColorBrush Opacity="0.0" Color="White"/>
     </Window.Background>
@@ -33,7 +34,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txtSearch, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition Height="30"/>

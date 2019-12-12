@@ -163,7 +163,6 @@ namespace BookmarkManager
             this.UpdateLayout();
             CenterWindowOnScreen();
             this.Focus();
-            txtSearch.Focus();
         }
 
         private void ClearSearchAndInputs()
@@ -629,5 +628,6 @@ namespace BookmarkManager
 
             DoSearches(false);
         }
+
     }
 }
