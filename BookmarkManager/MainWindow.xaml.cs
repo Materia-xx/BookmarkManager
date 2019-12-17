@@ -16,6 +16,14 @@ namespace BookmarkManager
     {
         // TODO: make it so tags can be described and the description shows up as a tooltip when you hover over the tag.
 
+        // TODO: there is a bug where starting the program in a RDP session then closing / re-open RDP makes it
+        // TODO: so the program does not become visible when the hotkey is pressed, but the icon in the taskbar
+        // TODO: does show that it recognized the hotkey press.
+
+        // TODO: opening a link like this crashes the program: file://c://etc..
+
+        // TODO: creating tags with underscores removes the first underscore when showing it, unless double __
+
         private HotKey activationHotkey;
         private static char[] charArraySpace = new char[] { ' ' };
 
@@ -150,10 +158,7 @@ namespace BookmarkManager
         private void HideSearchForm()
         {
             searchPerformed = false;
-            if (this.Visibility != Visibility.Collapsed)
-            {
-                this.Visibility = Visibility.Collapsed;
-            }
+            this.Visibility = Visibility.Hidden;
         }
 
         private void ShowSearchForm()
