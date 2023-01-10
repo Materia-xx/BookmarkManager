@@ -8,7 +8,7 @@ Running the program you will first see an empty search box.
 
 ![](Docs/SearchEmpty.png)
 
-Pressing Esc from here will hide the search box. Pressing the activation hotkey (CTRL-SHIFT-X) will bring it back.
+Pressing Esc from here will close the search box.
 
 ### Adding Bookmarks
 
@@ -50,7 +50,7 @@ Pressing up/down arrows cycles through the bookmark results.
 
 ![](Docs/SearchTermCycle.png)
 
-Pressing return after you have a bookmark selected will open that bookmark and hide the search window.
+Pressing return after you have a bookmark selected will open that bookmark and close the search window.
 
 Bookmarks are opened in your default web browser.
 
@@ -72,7 +72,3 @@ The folder where this file resides is determined by the "DBFolder" app.config se
 * |ApplicationData| - Stores the db file in the application data folder. e.g. C:\Users\alias\AppData\Roaming\BookmarkManager\Bookmark.db
 * |NextToExe| - Stores the db in the same place the exe is running from.
 * Or, you may type in a path in the app.config if you want to use another location.
-
-### HotKey Configuration
-
-The HotKey (and other settings) can be re-defined by right clicking on the main search box and selecting "Configure".
