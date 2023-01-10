@@ -16,15 +16,10 @@ namespace BookmarkManager
     {
         // TODO: make it so tags can be described and the description shows up as a tooltip when you hover over the tag.
 
-        // TODO: there is a bug where starting the program in a RDP session then closing / re-open RDP makes it
-        // TODO: so the program does not become visible when the hotkey is pressed, but the icon in the taskbar
-        // TODO: does show that it recognized the hotkey press.
-
         // TODO: opening a link like this crashes the program: file://c://etc..
 
         // TODO: creating tags with underscores removes the first underscore when showing it, unless double __
 
-        private HotKey activationHotkey;
         private static char[] charArraySpace = new char[] { ' ' };
 
         private List<string> previousSearchTerms = new List<string>();
@@ -36,6 +31,7 @@ namespace BookmarkManager
         private int selectedTagIndex = -1;
         private int selectedBookmarkIndex = -1;
         private bool searchPerformed = false;
+        private bool showingSubDialog = false;
 
         public MainWindow()
         {
@@ -51,7 +47,6 @@ namespace BookmarkManager
             DataProvider.DataStore.Value.Bookmarks.Value.TagsSearch("#pre-cache#");
             CenterWindowOnScreen();
             CreateSearchBoxContextMenu();
-            RegisterActivationHotkey();
 
             // If there is a URL on the clipboard, do a search for it. This makes it faster to edit an
             // already existing bookmark in the database.
@@ -74,83 +69,38 @@ namespace BookmarkManager
             MenuItem configureCommand = new MenuItem();
             configureCommand.Header = "Configure";
             configureCommand.Click += (s, e) => {
+                showingSubDialog = true;
+                HideSearchForm();
                 var configWindow = new ConfigWindow();
                 configWindow.ShowEditor();
-                RegisterActivationHotkey();
                 ShowSearchForm();
+                showingSubDialog = false;
             };
             searchMenu.Items.Add(configureCommand);
         }
 
-        private void RegisterActivationHotkey()
-        {
-            if (activationHotkey != null)
-            {
-                activationHotkey.HotKeyPressed -= Activation_HotKeyPressed;
-                activationHotkey.Dispose();
-            }
-
-            for (int attempt=1; attempt <=3; attempt++)
-            {
-                ModifierKeys hotkeyModifiers = ModifierKeys.None;
-                Keys hotkeyKey = Keys.None;
-
-                var config = DataProvider.DataStore.Value.Config.Value.GetConfig();
-                try
-                {
-                    if (config.HotkeyAlt)
-                    {
-                        hotkeyModifiers |= ModifierKeys.Alt;
-                    }
-                    if (config.HotkeyCtrl)
-                    {
-                        hotkeyModifiers |= ModifierKeys.Control;
-                    }
-                    if (config.HotkeyShift)
-                    {
-                        hotkeyModifiers |= ModifierKeys.Shift;
-                    }
-
-                    hotkeyKey = (Keys)Enum.Parse(typeof(Keys), config.HotkeyKey, true);
-                    activationHotkey = new HotKey(hotkeyModifiers, hotkeyKey, this);
-                    activationHotkey.HotKeyPressed += Activation_HotKeyPressed;
-                    break;
-                }
-                catch
-                {
-                    // Fallback to hardcoded default if we can't parse.
-                    var defaultConfig = new ConfigDto();
-                    config.HotkeyAlt = defaultConfig.HotkeyAlt;
-                    config.HotkeyCtrl = defaultConfig.HotkeyCtrl;
-                    config.HotkeyShift = defaultConfig.HotkeyShift;
-                    config.HotkeyKey = defaultConfig.HotkeyKey;
-                    DataProvider.DataStore.Value.Config.Value.Update(config);
-                }
-            }
-        }
-
-        private void Activation_HotKeyPressed(HotKey obj)
-        {
-            ClearSearchAndInputs();
-            ShowSearchForm();
-        }
-
         private void Window_Deactivated(object sender, EventArgs e)
         {
+            // If the reason we're deactivating the window is just to show the config or the url editor, then don't consider closing
+            if (showingSubDialog)
+            {
+                return;
+            }
+
             var config = DataProvider.DataStore.Value.Config.Value.GetConfig();
 
             // If the window is being deactivated because a search was just performed and a browser is taking focus
             if (searchPerformed)
             {
-                if (config.HideSearchFormOnSearch)
+                if (config.CloseSearchFormOnSearch)
                 {
-                    HideSearchForm();
+                    this.Close();
                 }
             }
             // If the window is being deactivated because the user is just clicking on some other window
-            else if(config.HideSearchFormOnLostFocus)
+            else if(config.CloseSearchFormOnLostFocus)
             {
-                HideSearchForm();
+                this.Close();
             }
             searchPerformed = false;
         }
@@ -397,10 +347,12 @@ namespace BookmarkManager
 
         private void BtnAddBookmark_Click(object sender, RoutedEventArgs e)
         {
+            showingSubDialog = true;
             HideSearchForm();
             var bookmarkEditor = new EditBookmarkWindow();
             bookmarkEditor.ShowEditor(null);
             ShowSearchForm();
+            showingSubDialog = false;
             DoSearches(true);
             txtSearch.Focus();
         }
@@ -549,12 +501,12 @@ namespace BookmarkManager
 
         private void TxtSearch_KeyUp(object sender, KeyEventArgs e)
         {
-            // Esc hides the search window, regardless of the config settings
+            // Esc closes the program
             if (e.Key == Key.Escape)
             {
                 e.Handled = true;
                 ClearSearchAndInputs();
-                HideSearchForm();
+                this.Close();
                 return;
             }
 

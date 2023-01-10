@@ -2,7 +2,6 @@
 using BookmarkDtos;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BookmarkManager
 {
@@ -27,13 +26,8 @@ namespace BookmarkManager
 
         private void RenderConfig()
         {
-            txtHotkeyKey.Text = config.HotkeyKey;
-            chkHotkeyAlt.IsChecked = config.HotkeyAlt;
-            chkHotkeyCtrl.IsChecked = config.HotkeyCtrl;
-            chkHotkeyShift.IsChecked = config.HotkeyShift;
-
-            chkHideSearchFormOnLostFocus.IsChecked = config.HideSearchFormOnLostFocus;
-            chkHideSearchFormOnSearch.IsChecked = config.HideSearchFormOnSearch;
+            chkCloseSearchFormOnLostFocus.IsChecked = config.CloseSearchFormOnLostFocus;
+            chkCloseSearchFormOnSearch.IsChecked = config.CloseSearchFormOnSearch;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -59,12 +53,6 @@ namespace BookmarkManager
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtHotkeyKey.Text))
-            {
-                MessageBox.Show("Hotkey is required.");
-                return;
-            }
-
             CUDResult result = DataProvider.DataStore.Value.Config.Value.Update(config);
             if (result.Errors.Any())
             {
@@ -76,37 +64,14 @@ namespace BookmarkManager
             }
         }
 
-        private void TxtHotkeyKey_TextChanged(object sender, TextChangedEventArgs e)
+        private void ChkCloseSearchFormOnLostFocus_CheckChanged(object sender, RoutedEventArgs e)
         {
-            if (txtHotkeyKey.Text.Length > 0)
-            {
-                config.HotkeyKey = txtHotkeyKey.Text.Substring(0, 1);
-            }
+            config.CloseSearchFormOnLostFocus = chkCloseSearchFormOnLostFocus.IsChecked.Value;
         }
 
-        private void ChkHotkeyCtrl_CheckChanged(object sender, RoutedEventArgs e)
+        private void ChkCloseSearchFormOnSearch_CheckChanged(object sender, RoutedEventArgs e)
         {
-            config.HotkeyCtrl = chkHotkeyCtrl.IsChecked.Value;
-        }
-
-        private void ChkHotkeyShift_CheckChanged(object sender, RoutedEventArgs e)
-        {
-            config.HotkeyShift = chkHotkeyShift.IsChecked.Value;
-        }
-
-        private void ChkHotkeyAlt_CheckChanged(object sender, RoutedEventArgs e)
-        {
-            config.HotkeyAlt = chkHotkeyAlt.IsChecked.Value;
-        }
-
-        private void ChkHideSearchFormOnLostFocus_CheckChanged(object sender, RoutedEventArgs e)
-        {
-            config.HideSearchFormOnLostFocus = chkHideSearchFormOnLostFocus.IsChecked.Value;
-        }
-
-        private void ChkHideSearchFormOnSearch_CheckChanged(object sender, RoutedEventArgs e)
-        {
-            config.HideSearchFormOnSearch = chkHideSearchFormOnSearch.IsChecked.Value;
+            config.CloseSearchFormOnSearch = chkCloseSearchFormOnSearch.IsChecked.Value;
         }
     }
 }
